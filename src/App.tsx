@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useMemo } from 'react';
 import L from 'leaflet';
-import { WorkflowCard } from '@/components/WorkflowCard';
 import { BusMap } from '@/components/BusMap';
 import { ShelterDialog } from '@/components/ShelterDialog';
 import { NewStopNotification } from '@/components/NewStopNotification';
@@ -20,6 +19,8 @@ import {
   RefreshCw,
   Sun,
   Moon,
+  Play,
+  Loader2,
   Map,
   List
 } from 'lucide-react';
@@ -106,6 +107,7 @@ function App() {
   const [newlyInsertedStop, setNewlyInsertedStop] = useState<BusShelterData | null>(null);
   const [filters, setFilters] = useState<FilterState>(initialFilters);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
+  const [isSimulatingWorkflow, setIsSimulatingWorkflow] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const mapRef = useRef<L.Map | null>(null);
 
@@ -144,6 +146,15 @@ function App() {
     }
   }, [newlyInsertedStop]);
 
+  const handleSimulateWorkflow = useCallback(async () => {
+    if (isSimulatingWorkflow) return;
+
+    setIsSimulatingWorkflow(true);
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    handleWorkflowComplete();
+    setIsSimulatingWorkflow(false);
+  }, [handleWorkflowComplete, isSimulatingWorkflow]);
+
   const stats = {
     total: filteredShelters.length,
     good: filteredShelters.filter(s => s.status === 'good').length,
@@ -178,6 +189,23 @@ function App() {
                   Last update: {lastRefresh.toLocaleTimeString('en-US')}
                 </span>
               </div>
+              <Button
+                onClick={handleSimulateWorkflow}
+                disabled={isSimulatingWorkflow}
+                className="gap-2 btn-primary-glow px-4 py-2 text-sm font-semibold"
+              >
+                {isSimulatingWorkflow ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Processando...
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4" />
+                    Simular Workflow
+                  </>
+                )}
+              </Button>
               <Button 
                 variant="outline" 
                 size="icon" 
@@ -193,9 +221,6 @@ function App() {
 
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 py-6 flex flex-col gap-5">
-        {/* Workflow Card */}
-        <WorkflowCard onComplete={handleWorkflowComplete} />
-
         {/* Filter Panel */}
         <FilterPanel 
           shelters={shelters}

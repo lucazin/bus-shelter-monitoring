@@ -9,7 +9,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
-  HardDrive, 
   MapPin, 
   Clock, 
   AlertTriangle, 
@@ -149,24 +148,13 @@ export function ShelterDialog({ shelter, open, onOpenChange }: ShelterDialogProp
         </div>
 
         {/* Bus Stops Count */}
-        <div className="p-4 rounded-xl summary-info-card">
+        <div className="p-4 rounded-xl summary-info-card col-span-2">
           <div className="flex flex-col items-center text-center">
             <div className="p-3 rounded-xl icon-bg-primary-lg mb-3">
               <StopCircle className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
             </div>
             <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-muted-foreground)' }}>Bus Stops</p>
             <p className="text-3xl font-black" style={{ color: 'var(--color-primary)' }}>{shelter.busStopsCount}</p>
-          </div>
-        </div>
-
-        {/* DVR ID */}
-        <div className="p-4 rounded-xl summary-info-card">
-          <div className="flex flex-col items-center text-center">
-            <div className="p-3 rounded-xl icon-bg-primary-lg mb-3">
-              <HardDrive className="w-6 h-6" style={{ color: 'var(--color-primary)' }} />
-            </div>
-            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-muted-foreground)' }}>DVR ID</p>
-            <p className="text-lg font-bold" style={{ color: 'var(--color-foreground)' }}>{shelter.dvrId}</p>
           </div>
         </div>
       </div>
@@ -242,14 +230,10 @@ export function ShelterDialog({ shelter, open, onOpenChange }: ShelterDialogProp
           </div>
 
           {/* IDs Below Image */}
-          <div className="grid grid-cols-2 gap-2 mt-3">
+          <div className="mt-3">
             <div className="details-card p-2.5 rounded-xl">
               <p className="text-[10px] font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Bus ID</p>
               <p className="font-mono font-bold text-sm text-blue-600">{shelter.busId}</p>
-            </div>
-            <div className="details-card p-2.5 rounded-xl">
-              <p className="text-[10px] font-medium" style={{ color: 'var(--color-muted-foreground)' }}>DVR ID</p>
-              <p className="font-mono font-bold text-sm text-blue-600">{shelter.dvrId}</p>
             </div>
           </div>
 

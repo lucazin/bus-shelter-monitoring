@@ -6,7 +6,6 @@ import {
   X, 
   ChevronDown,
   Bus,
-  HardDrive,
   Clock,
   Package,
   Hash
@@ -14,7 +13,6 @@ import {
 import type { BusShelterData } from '@/data/mockData';
 
 export interface FilterState {
-  dvrId: string;
   busId: string;
   capturedFrom: string;
   capturedTo: string;
@@ -33,7 +31,6 @@ interface FilterPanelProps {
 }
 
 export const initialFilters: FilterState = {
-  dvrId: '',
   busId: '',
   capturedFrom: '',
   capturedTo: '',
@@ -46,11 +43,6 @@ export const initialFilters: FilterState = {
 
 export function applyFilters(shelters: BusShelterData[], filters: FilterState): BusShelterData[] {
   return shelters.filter(shelter => {
-    // DVR ID filter
-    if (filters.dvrId && !shelter.dvrId.toLowerCase().includes(filters.dvrId.toLowerCase())) {
-      return false;
-    }
-
     // Bus ID filter
     if (filters.busId && !shelter.busId.toLowerCase().includes(filters.busId.toLowerCase())) {
       return false;
@@ -108,10 +100,6 @@ export function FilterPanel({ shelters, filters, onFiltersChange, filteredCount 
   const [isExpanded, setIsExpanded] = useState(false);
 
   // Get unique values for dropdowns
-  const uniqueDvrIds = useMemo(() => 
-    [...new Set(shelters.map(s => s.dvrId))].sort(), 
-    [shelters]
-  );
   const uniqueBusIds = useMemo(() => 
     [...new Set(shelters.map(s => s.busId))].sort(), 
     [shelters]
@@ -119,7 +107,6 @@ export function FilterPanel({ shelters, filters, onFiltersChange, filteredCount 
 
   const activeFiltersCount = useMemo(() => {
     let count = 0;
-    if (filters.dvrId) count++;
     if (filters.busId) count++;
     if (filters.capturedFrom || filters.capturedTo) count++;
     if (filters.clipGenFrom || filters.clipGenTo) count++;
@@ -168,25 +155,7 @@ export function FilterPanel({ shelters, filters, onFiltersChange, filteredCount 
       {/* Filters Content */}
       {isExpanded && (
         <div className="p-4 pt-2 border-t" style={{ borderColor: 'var(--color-border)' }}>
-          <div className="grid grid-cols-6 gap-4">
-            {/* DVR ID */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
-                <HardDrive className="w-3.5 h-3.5" />
-                DVR ID
-              </label>
-              <select
-                value={filters.dvrId}
-                onChange={(e) => updateFilter('dvrId', e.target.value)}
-                className="w-full p-2 rounded-lg text-sm filter-input"
-              >
-                <option value="">All DVRs</option>
-                {uniqueDvrIds.map(id => (
-                  <option key={id} value={id}>{id}</option>
-                ))}
-              </select>
-            </div>
-
+          <div className="grid grid-cols-5 gap-4">
             {/* Bus ID */}
             <div className="space-y-1.5">
               <label className="text-xs font-medium flex items-center gap-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
